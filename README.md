@@ -76,8 +76,10 @@ The first time Claude Code opens this project it will detect `.mcp.json` and ask
 |---------|-------------|
 | `/canvas-check` | List all pending assignments across your courses |
 | `/canvas-check <course-name>` | Same, filtered to one course (substring match on course name or code) |
-| `/canvas-next` | Show only the **single** next-due pending assignment (across all courses) — useful when you don't want to scroll a long list |
+| `/canvas-next` | Show the next submittable pending assignment after the last one you viewed — advances a cursor each call so you page forward without repeating |
 | `/canvas-next <course-name>` | Same, scoped to one course |
+| `/canvas-oldest` | Show the earliest-due submittable pending assignment (ignores cursor — use this to find the most overdue item or reset your place) |
+| `/canvas-oldest <course-name>` | Same, scoped to one course |
 | `/canvas-do <assignment_id>` | Research → draft → review → in-chat preview → save draft to Canvas → visual inspection in browser → confirm → submit |
 | `/canvas-submit <assignment_id>` | Submit your own text (skips the draft workflow) |
 
@@ -103,7 +105,7 @@ Canvas renders `online_text_entry` submission bodies as **HTML**, not markdown. 
   - `list_assignments` does NOT use Canvas's `bucket=unsubmitted` filter (that filter silently excludes overdue work). It fetches all assignments and filters client-side on `submission.workflow_state` so past-due unsubmitted items show up.
   - `save_draft` uses Canvas's GraphQL `createSubmissionDraft` mutation at `/api/graphql` — the same call the modern React assignment UI makes when you type in the text box. The REST endpoint `/api/v1/submission_drafts` is disabled at some institutions (including SMC), so the GraphQL path is more portable.
 - **`.claude/agents/`** — three subagents (`canvas-researcher`, `canvas-writer`, `canvas-reviewer`) that run in isolated contexts so heavy reading (attachments, rubrics) doesn't pollute the main conversation.
-- **`.claude/commands/`** — three slash commands that orchestrate the agents and MCP tools.
+- **`.claude/commands/`** — slash commands that orchestrate the agents and MCP tools. `canvas-next` advances a cursor saved in `.claude/canvas-cursor.json`; `canvas-oldest` finds the earliest-due submittable assignment without touching the cursor. Both skip `submission_types: ["none"]` in-class assignments that cannot be submitted online.
 - **`.mcp.json`** — registers the server in this project only.
 - **`.claude/settings.json`** — auto-allows the read-only tools (`list_courses`, `list_assignments`, `get_assignment`) plus `prepare_submission` (which only stages locally, no Canvas write). `save_draft` and `submit_assignment` are NOT in the allow list and will prompt on every call — `save_draft` because it writes to Canvas's draft store, `submit_assignment` because it creates a permanent attempt. If you find the `save_draft` prompt noisy, you can add it to `permissions.allow` at your own discretion; the workflow always shows the assignment URL afterward regardless.
 - **`scripts/probe_draft.py`** — diagnostic script that probes every known draft-save mechanism (REST flat, REST nested, REST JSON, assignment-scoped REST, GraphQL) against your Canvas instance and reports which work. Run when `save_draft` starts failing or when porting this repo to a new institution: `python3 scripts/probe_draft.py`.

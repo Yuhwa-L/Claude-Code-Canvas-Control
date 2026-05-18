@@ -33,3 +33,4 @@ Thumbs.db
 
 # Claude local overrides
 .claude/settings.local.json
+.claude/canvas-cursor.json
