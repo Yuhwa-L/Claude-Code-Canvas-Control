@@ -80,14 +80,14 @@ The first time Claude Code opens this project it will detect `.mcp.json` and ask
 | `/canvas-next <course-name>` | Same, scoped to one course |
 | `/canvas-oldest` | Show the earliest-due submittable pending assignment (ignores cursor — use this to find the most overdue item or reset your place) |
 | `/canvas-oldest <course-name>` | Same, scoped to one course |
-| `/canvas-do <assignment_id>` | Research → draft → review → in-chat preview → save draft to Canvas → visual inspection in browser → confirm → submit |
+| `/canvas-do <assignment_id>` | Fully automatic: research → draft → review → show draft in chat → confirm → save draft to Canvas → visual inspection in browser → confirm → submit |
 | `/canvas-submit <assignment_id>` | Submit your own text (skips the draft workflow) |
 
 ## How submission safety works
 
-`/canvas-do` walks through three checkpoints before a real submission is created on Canvas:
+`/canvas-do` runs the full pipeline automatically (research → draft → review) and then walks through three checkpoints before a real submission is created on Canvas:
 
-1. **In-chat draft review.** After the writer/reviewer pipeline approves a draft, the full text is shown in chat with a Yes / Edit / Cancel prompt.
+1. **In-chat draft review.** After the writer/reviewer pipeline approves a draft, the full text is shown in chat with a Yes / Edit / Cancel prompt. The research brief is displayed inline before drafting but does not pause the workflow.
 2. **Canvas-UI inspection.** The draft is written to the assignment's text-entry box via `save_draft` (NOT submitted yet — Canvas treats it as the auto-saved draft, the same as if you'd typed it). You open the assignment URL in your browser, verify the rendering, line breaks, bold, spacing, and any special characters, then answer a Looks good / Edit / Cancel prompt. This step catches HTML/formatting issues before they're locked into a graded submission.
 3. **MCP token gate.** Even after both prompts, the `submit_assignment` tool requires a `confirm_token` issued by `prepare_submission`. The token is bound to (assignment_id, body hash), expires after 10 minutes, and is invalidated on first use. A misbehaving agent cannot blind-submit — and cannot swap the body between prepare and submit either.
 

@@ -19,7 +19,7 @@ Spawn the `canvas-researcher` subagent via the Task tool. Pass it a short prompt
 
 > "Produce a research brief for Canvas assignment_id=<X>, course_id=<Y>. Use the get_assignment tool to load it, read every attachment from its local_path, and return the brief in the structured format you're trained on."
 
-Receive the brief. Show it to the user verbatim so they can sanity-check before drafting.
+Receive the brief. Show it to the user as a brief inline summary (no pause — do NOT wait for user input here), then immediately proceed to Step 2.
 
 ### Step 2: Draft
 Spawn the `canvas-writer` subagent via the Task tool. Pass it the full brief from Step 1. Receive the draft.
