@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__canvas__list_courses",
+      "mcp__canvas__list_assignments",
+      "mcp__canvas__get_assignment",
+      "mcp__canvas__prepare_submission"
+    ],
+    "ask": [
+      "mcp__canvas__submit_assignment"
+    ]
+  },
+  "enabledMcpjsonServers": ["canvas"]
+}

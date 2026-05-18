@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "canvas": {
+      "command": "python3",
+      "args": ["server/canvas_mcp.py"]
+    }
+  }
+}
