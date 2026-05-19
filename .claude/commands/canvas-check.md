@@ -16,9 +16,16 @@ The user wants to see pending Canvas assignments. Arguments: `$ARGUMENTS` (may b
 
 3. Render the result as a compact markdown table:
 
-   | Due | Course | Assignment | Pts | ID |
-   |-----|--------|-----------|-----|------|
-   | 2026-05-20 | HIST 201 | Essay 3: Reformation | 100 | 12345 |
+   | Due | Course | Assignment | Type | Pts | ID |
+   |-----|--------|-----------|------|-----|------|
+   | 2026-05-20 | HIST 201 | Essay 3: Reformation | text | 100 | 12345 |
+
+   For the **Type** column, map `submission_types` to a short label:
+   - `["discussion_topic"]` → `discussion`
+   - `["online_text_entry"]` → `text`
+   - `["online_upload"]` → `upload`
+   - `["none"]` or empty → `in-class`
+   - anything else → the raw value
 
    Sort by due date (already sorted by the server, but verify). Show due dates in `YYYY-MM-DD` format in the user's local sense (Canvas returns UTC ISO — just slice the date portion is fine).
 

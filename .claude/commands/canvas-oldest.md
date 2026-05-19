@@ -30,9 +30,16 @@ If zero rows remain, say "No submittable pending assignments. Nice." and stop.
 
 Render as a compact one-row table:
 
-| Due | Course | Assignment | Pts | ID |
-|-----|--------|------------|-----|----|
-| 2026-05-20 | HIST 201 | Essay 3: Reformation | 100 | 12345 |
+| Due | Course | Assignment | Type | Pts | ID |
+|-----|--------|------------|------|-----|----|
+| 2026-05-20 | HIST 201 | Essay 3: Reformation | text | 100 | 12345 |
+
+For the **Type** column, map `submission_types` to a short label:
+- `["discussion_topic"]` → `discussion`
+- `["online_text_entry"]` → `text`
+- `["online_upload"]` → `upload`
+- `["none"]` or empty → `in-class`
+- anything else → the raw value
 
 Due dates as `YYYY-MM-DD`.
 

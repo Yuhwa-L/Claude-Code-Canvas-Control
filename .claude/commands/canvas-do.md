@@ -1,7 +1,7 @@
 ---
 description: Full workflow — research, draft, review, preview, and (with confirmation) submit a Canvas assignment.
 argument-hint: <assignment_id> [course_id]
-allowed-tools: Task, mcp__canvas__list_assignments, mcp__canvas__save_draft, mcp__canvas__prepare_submission, mcp__canvas__submit_assignment, AskUserQuestion
+allowed-tools: Task, mcp__canvas__list_assignments, mcp__canvas__save_draft, mcp__canvas__prepare_submission, mcp__canvas__submit_assignment, AskUserQuestion, Read, Write
 ---
 
 The user wants you to do the full workflow on a Canvas assignment. Arguments: `$ARGUMENTS`.
@@ -63,8 +63,15 @@ Show the user the preview returned by `prepare_submission` (word count + first/l
 
 ONLY if the user picks Submit: call `mcp__canvas__submit_assignment(assignment_id, confirm_token=<the token>)`.
 
-### Step 8: Report
+### Step 8: Report + update cursor
 Show the user the submission result — whether ok, the submission_id, the html_url to view it on Canvas, and the audit log line.
+
+Then update the cursor file at `.claude/canvas-cursor.json`:
+- Read the file (create `{}` if absent).
+- Set the key `"<course_id>"` to the submitted `assignment_id`.
+- Write the file back, preserving all other keys.
+
+This ensures `/canvas-next` advances past the just-submitted assignment automatically.
 
 ## Rules
 
